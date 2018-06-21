@@ -18,6 +18,7 @@ RUN apt-get update \
         curl \
         wget \
         git \
+        vim \
         zip \
         libz-dev \
         libssl-dev \
@@ -32,6 +33,8 @@ RUN curl -sS https://getcomposer.org/installer | php \
 RUN docker-php-ext-install pdo_mysql
 
 RUN docker-php-ext-install mysqli
+
+RUN docker-php-ext-install pcntl
 
 RUN mkdir -p /usr/src/php/ext/redis \
     && curl -L https://github.com/phpredis/phpredis/archive/3.1.4.tar.gz | tar xvz -C /usr/src/php/ext/redis --strip 1 \
