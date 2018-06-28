@@ -20,6 +20,7 @@
 //declare(ticks=1);
 
 use \GatewayWorker\Lib\Gateway;
+use  app\events_handler\User;
 
 /**
  * 主逻辑
@@ -49,6 +50,18 @@ class Events
     */
    public static function onMessage($client_id, $message)
    {
+        // 解析获取的消息
+        var_dump($message);
+        try {
+            $data = json_decode($message,1);
+        } catch (Exception $e) {
+            $data  = array();
+        }
+        if ($message['type'] && is_callable(User::class.'::'.$data['type'])) {
+            $data['client_id'] = $client_id;
+            call_user_func_array(User::class.'::'.$data['type'], $data);
+        }
+
         // 向所有人发送 
         Gateway::sendToAll("$client_id said $message\r\n");
    }

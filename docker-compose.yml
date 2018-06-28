@@ -1,0 +1,11 @@
+version: '2'
+services:
+    workman_server:
+        image: dingshiwei/myworkerman:v1
+        ports:
+            - "8020:2020"
+            - "8030:2030"
+        volumes:
+            - ./:/opt/dsw/workerman
+        command: php /opt/dsw/workerman/start.php start
+

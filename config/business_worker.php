@@ -1,6 +1,8 @@
 <?php
-function env($env, $default) {
-    return $env ? : $default;
+if (!function_exists('env')) {
+    function env($env, $default) {
+        return $env ? : $default;
+    }
 }
 
 $config = array(

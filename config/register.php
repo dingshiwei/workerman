@@ -5,8 +5,10 @@
  * Date: 2018/6/21 0021
  * Time: 14:46
  */
-function env($env, $default) {
-    return $env ? : $default;
+if (!function_exists('env')) {
+    function env($env, $default) {
+        return $env ? : $default;
+    }
 }
 
 $config = array(
