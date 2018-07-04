@@ -5,6 +5,7 @@ services:
         ports:
             - "8020:2020"
             - "8030:2030"
+            - "80:80"
         volumes:
             - ./:/opt/dsw/workerman
         command: php /opt/dsw/workerman/start.php start

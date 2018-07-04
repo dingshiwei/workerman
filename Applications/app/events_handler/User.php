@@ -6,7 +6,7 @@
  * Time: 16:45
  */
 namespace app\events_handler;
-use app\db\Mysql;
+use service\Mysql;
 
 class User {
 
@@ -30,12 +30,12 @@ class User {
                     return true;
                 }
                 //如果client_id不同 则删除旧的，新增(或者删除都通过心跳机制 检测不到则删除)
-                list($vuid, $ip) = $message;
                 $log_id = $db->insert(self::$user_clients)
                     ->cols(array(
-                        'vuid' => $vuid,
-                        'ip' => $ip,
-                        'update' => date("Y-m-d H:i:s"),
+                        'vuid' => $message['vuid'],
+                        'client_id' => $client_id,
+                        'ip' => $_SERVER['REMOTE_ADDR'],
+                        'update_at' => date("Y-m-d H:i:s"),
                         'create_at' => date("Y-m-d H:i:s")
                     ))
                     ->query();
@@ -54,19 +54,19 @@ class User {
 
     }
 
-    private function deleteClient($vuid, $client)
+    public static function deleteClient($vuid, $client_id)
     {
-        if (!$vuid && !$client) {
+        if (!$vuid && !$client_id) {
             return false;
         }
         if ($vuid) {
             $where['vuid'] = $vuid;
         }
-        if ($client) {
-            $where['vuid'] = $vuid;
+        if ($client_id) {
+            $where['client_id'] = $client_id;
         }
         if ($db = Mysql::load()) {
-            $db->delete(self::$user_clients)
+            $res = $db->delete(self::$user_clients)
                 ->where($where)
                 ->limit(100)
                 ->query();

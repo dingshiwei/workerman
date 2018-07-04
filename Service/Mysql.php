@@ -6,18 +6,22 @@
  * Time: 10:30
  */
 
-namespace app\db;
+namespace service\Mysql;
 use \Workerman\MySQL\Connection;
 
 class Mysql
 {
     private static $db;
 
-    public static function load($env= 'production')
+    public static function load($env = 'production')
     {
-        $db_config = require "./../../../phinx.php";
-        if (empty($db_config[$env])) return false;
-        $db = $db_config[$env];
+        try {
+            $db_config = require_once(realpath(dirname(__FILE__) . '/../../../phinx.php'));
+        } catch (\Exception $e) {
+            // can not load the DB config
+        }
+        if (empty($db_config['environments'][$env])) return false;
+        $db = $db_config['environments'][$env];
         if (!self::$db) {
             try {
                 self::$db = new Connection($db['host'],$db['port'], $db['user'], $db['pass'], $db['name']);

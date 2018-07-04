@@ -51,19 +51,27 @@ class Events
    public static function onMessage($client_id, $message)
    {
         // 解析获取的消息
-        var_dump($message);
         try {
             $data = json_decode($message,1);
         } catch (Exception $e) {
             $data  = array();
         }
-        if ($message['type'] && is_callable(User::class.'::'.$data['type'])) {
-            $data['client_id'] = $client_id;
-            call_user_func_array(User::class.'::'.$data['type'], $data);
+        if (!isset($_SESSION['vuid'])) {
+            // 消息类型不是登录视为非法请求，关闭连接
+            if($data['type'] !== 'login')
+            {
+                Gateway::closeClient($client_id);
+                return;
+            }
+            // 设置session，标记该客户端已经登录
+            $_SESSION['vuid'] = $data['vuid'];
+        }
+        if ($data['type'] && is_callable(User::class.'::'.$data['type'])) {
+            call_user_func_array(User::class.'::'.$data['type'], array($client_id, $data));
         }
 
         // 向所有人发送 
-        Gateway::sendToAll("$client_id said $message\r\n");
+        Gateway::sendToClient($client_id, "log login success $client_id\r\n");
    }
    
    /**
@@ -72,7 +80,8 @@ class Events
     */
    public static function onClose($client_id)
    {
-       // 向所有人发送 
-       GateWay::sendToAll("$client_id logout\r\n");
+       // 向所有人发送
+       // 删除client_id以及数据库里的数据
+       User::deleteClient('', $client_id);
    }
 }
