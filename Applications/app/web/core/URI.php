@@ -22,7 +22,7 @@ class URI
         } catch (\Exception $e) {
             throw $e;
         }
-
+        var_dump($segments);
         $class = ucfirst($segments[0]);
         $method = isset($segments[1]) ? $segments[1] : 'index';
         $params = array_slice($segments, 2);

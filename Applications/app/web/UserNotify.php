@@ -31,7 +31,7 @@ class UserNotify extends MyController
         }
         // 判断是否在线
         if (Gateway::isOnline($client_id)) {
-            return $this->apiReturn(array('state'=>3002, 'mess'=>'当前客户端离线'));
+            return $this->apiReturn(array('state'=>3003, 'mess'=>'当前客户端离线'));
         }
         // 发出绑定成功通知
         Gateway::sendToClient($client_id, json_encode(array('type'=>'user_bind', 'data'=>['vuid'=>$vuid])));

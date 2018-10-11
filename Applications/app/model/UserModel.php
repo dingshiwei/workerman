@@ -6,7 +6,7 @@
  * Time: 15:01
  */
 namespace app\model;
-use service\Mysql;
+use \service\Mysql;
 
 class UserModel
 {

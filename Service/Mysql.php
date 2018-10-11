@@ -6,7 +6,7 @@
  * Time: 10:30
  */
 
-namespace service\Mysql;
+namespace service;
 use \Workerman\MySQL\Connection;
 
 class Mysql
@@ -16,7 +16,7 @@ class Mysql
     public static function load($env = 'production')
     {
         try {
-            $db_config = require_once(realpath(dirname(__FILE__) . '/../../../phinx.php'));
+            $db_config = require_once(__DIR__.'/../phinx.php');
         } catch (\Exception $e) {
             // can not load the DB config
         }

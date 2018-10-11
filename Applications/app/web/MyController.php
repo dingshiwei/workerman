@@ -13,7 +13,7 @@ class MyController
 {
     public function __construct()
     {
-        require_once __DIR__.'../config/gateway.php';
+        require __DIR__.'/../config/gateway.php';
         Gateway::$registerAddress = $config['register_address'];
         // Gateway::$secretKey = Config::getConfig('SecretKey');
     }
